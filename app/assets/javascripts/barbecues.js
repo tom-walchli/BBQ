@@ -15,7 +15,8 @@ $('#addBbqCancel').click( function (event){
 
     isJoining = true
     var $button = $(event.target)
-    var bbqId = $button.closest('[data-bbq]').data('bbq')
+    var bbqLI = $button.closest('[data-bbq]')
+    var bbqId = $(bbqLI).data('bbq')
 
     var request = $.post('/api/barbecues/' + bbqId + '/join')
 
@@ -24,10 +25,46 @@ $('#addBbqCancel').click( function (event){
       isJoining = false
     })
 
-    request.done(function () {
+    request.done(function (data) {
       $button.fadeOut()
       isJoining = false
+
+      bringing(data)
     })
+
+    function bringing(data){
+        var popup = prompt("What are you bringing?", "Steak");
+        if (popup != null) {
+          console.log(popup);
+          data.appt.bringing = popup;
+
+          var bring_request = $.post('/api/appointments/' + data.appt.id + '/bring' + popup);
+
+          bring_request.fail(function () {
+            alert('Not allowed to bring anything. Try again later.');
+          })
+
+          bring_request.done(function (data) {
+            addAppointment(data);
+          })
+        }
+    }
+
+    function addAppointment(data){
+        var apptList = $(bbqLI).find('.js-appointments')
+
+        var newDT = document.createElement('dt');
+        newDT.text = data.user.name;
+        $(apptList).append(newDT);
+
+        var newDD = document.createElement('dt');
+        newDD.text = data.user.name;
+        $(apptList).append(newDD);
+
+        console.log(bbqId,data);
+    }
+
+
   })
 
   if ($('[data-hook~=controller-barbecues][data-hook~=action-show]').length) {

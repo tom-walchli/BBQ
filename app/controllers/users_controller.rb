@@ -24,7 +24,4 @@ class UsersController < ApplicationController
   def login
     @cat = User.new()
   end
-
-
-
 end

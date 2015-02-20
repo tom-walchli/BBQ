@@ -4,7 +4,23 @@ class ApiController < ApplicationController
 	bbq = Barbecue.find_by(id: params[:id])
 	appt = bbq.appointments
 	users = bbq.users
-	render(json: [bbq , appt, users])
+	render(json: bbq)
+  end
+
+  def join
+  	appt = Appointment.new(user_id: current_user.id, barbecue_id: params[:id].to_i, bringing: params[:bringing])
+  	if !appt.save
+  		puts appt.errors.full_messages
+  	end
+  	render(json: {appointment: appt, user: current_user})
+  end
+
+  def bring
+  	appt = Appointment.find(params[:id])
+  	if !appt.update_attributes(:bringing => params[:bringing])
+  		puts appt.errors.full_messages
+  	end
+  	render(json: {appointment: appt, user: current_user})
   end
 
 end
