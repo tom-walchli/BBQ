@@ -6,27 +6,34 @@
 
 <ul class="list-unstyled">
   <% @barbecues.each do |bbq| %>
-    <li data-bbq="<%= bbq.id %>">
-      <h2>
-        <a href="<%= api_barbecue_path(bbq.id) %>">
-          <%= bbq.title %>
-        </a>
-      </h2>
+  <li data-bbq="<%= bbq.id %>">
+    <h2>
+      <a href="<%= api_barbecue_path(bbq.id) %>">
+        <%= bbq.title %>
+      </a>
+    </h2>
 
-      <dl>
-        <dt>Date:</dt>
-        <dd><%= format_date(bbq.date) %></dd>
-        <dt>Venue:</dt>
-        <dd><%= bbq.venue %></dd>
-      </dl>
+    <dl>
+      <dt>Date:</dt>
+      <dd><%= format_date(bbq.date) %></dd>
+      <dt>Venue:</dt>
+      <dd><%= bbq.venue %></dd>
+    </dl>
 
-      <button class="btn btn-success" data-hook="join-bbq">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        Join <%= bbq.title %>
-      </button>
-
-      
-
-    </li>
+    <button class="btn btn-success" data-hook="join-bbq">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Join <%= bbq.title %>
+    </button>
+    <% if bbq.appointments.count > 0 %>
+    <h4><b>Who's showing?</b></h4>
+    <dl style="padding-left:30px;">
+      <% bbq.appointments.each do |appt| %>
+      <dt><%= appt.user.name %></dt>
+      <dd>&rarr; bringing: <%= appt.bringing %></dd>
+      <% end %>
+    </dl>
+    <% end %>
+    <div style="background-color:#aaaaaa;height:10px;"></div>
+  </li>
   <% end %>
 </ul>
