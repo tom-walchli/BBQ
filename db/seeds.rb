@@ -21,7 +21,7 @@ end
 bringing = ['6-Pack', 'Cookies', '12-Pack', 'Steaks', 'Chorizos', 'Ice', 'Chips', 'Wine','Booze']
 
 (1..20).each do |k|
-	(1..3).each do |j|
+	(1..2).each do |j|
 		appt = Appointment.new(user_id: k, barbecue_id: 1+rand(10), bringing: bringing.sample)
 		if !appt.save
   			puts appt.errors.full_messages

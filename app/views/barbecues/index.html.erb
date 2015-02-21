@@ -28,7 +28,7 @@
     <% end %>
     <% if bbq.appointments.count > 0 %>
     <h4><b>Who's showing?</b></h4>
-    <dl style="padding-left:30px;">
+    <dl data-appt="yes" class="js-appointments" style="padding-left:30px;">
       <% bbq.appointments.each do |appt| %>
       <dt><%= appt.user.name %></dt>
       <dd>&rarr; bringing: <%= appt.bringing %></dd>

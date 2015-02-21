@@ -2,8 +2,6 @@ class ApiController < ApplicationController
 
   def show
 	bbq = Barbecue.find_by(id: params[:id])
-	appt = bbq.appointments
-	users = bbq.users
 	render(json: bbq)
   end
 
@@ -12,7 +10,7 @@ class ApiController < ApplicationController
   	if !appt.save
   		puts appt.errors.full_messages
   	end
-  	render(json: {appointment: appt, user: current_user})
+  	render(json: {appt: appt, user: current_user})
   end
 
   def bring
@@ -20,7 +18,7 @@ class ApiController < ApplicationController
   	if !appt.update_attributes(:bringing => params[:bringing])
   		puts appt.errors.full_messages
   	end
-  	render(json: {appointment: appt, user: current_user})
+  	render(json: {appt: appt, user: current_user})
   end
 
 end

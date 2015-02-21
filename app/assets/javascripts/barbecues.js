@@ -15,8 +15,11 @@ $('#addBbqCancel').click( function (event){
 
     isJoining = true
     var $button = $(event.target)
+    console.log($button);
     var bbqLI = $button.closest('[data-bbq]')
+    console.log(bbqLI);
     var bbqId = $(bbqLI).data('bbq')
+    console.log(bbqId);
 
     var request = $.post('/api/barbecues/' + bbqId + '/join')
 
@@ -28,43 +31,38 @@ $('#addBbqCancel').click( function (event){
     request.done(function (data) {
       $button.fadeOut()
       isJoining = false
-
       bringing(data)
     })
 
     function bringing(data){
-        var popup = prompt("What are you bringing?", "Steak");
-        if (popup != null) {
-          console.log(popup);
-          data.appt.bringing = popup;
+        var popup = prompt("What are you bringing?", "e.g. Steak, Beer, Salad, etc.");
+        if (popup !== null && popup !== "") {
 
-          var bring_request = $.post('/api/appointments/' + data.appt.id + '/bring' + popup);
-
+          var bring_request = $.post('/api/appointments/' + data.appt.id + '/bring/' + popup);
+                                         
           bring_request.fail(function () {
-            alert('Not allowed to bring anything. Try again later.');
-          })
+            alert("You're not allowed to bring anything. Try again later.");
+            addAppointment_bringNothing(data);
+          });
 
           bring_request.done(function (data) {
             addAppointment(data);
-          })
+          });
+        } else {
+          addAppointment_bringNothing(data);
         }
     }
 
     function addAppointment(data){
-        var apptList = $(bbqLI).find('.js-appointments')
-
-        var newDT = document.createElement('dt');
-        newDT.text = data.user.name;
-        $(apptList).append(newDT);
-
-        var newDD = document.createElement('dt');
-        newDD.text = data.user.name;
-        $(apptList).append(newDD);
-
-        console.log(bbqId,data);
+        var apptList = $(bbqLI).find('[data-appt]').first();
+        $(apptList).append("<dt>" + data.user.name + "</dt>");
+        $(apptList).append("<dd>&rarr; bringing: " + data.appt.bringing + "</dd>");
     }
 
-
+    function addAppointment_bringNothing(data){
+        var apptList = $(bbqLI).find('[data-appt]').first();
+        $(apptList).append("<dt>" + data.user.name + "</dt>");
+    }
   })
 
   if ($('[data-hook~=controller-barbecues][data-hook~=action-show]').length) {
